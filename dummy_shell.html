@@ -1,29 +1,68 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Dummy Shell (Safe)</title>
+  <meta charset="utf-8" />
+  <title>Dummy Shell Simulation (Safe)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: monospace; background:#f4f4f4; padding:20px; }
-    input { width: 300px; padding:5px; }
-    button { padding:5px 10px; margin-left:5px; }
-    #output { margin-top:15px; color:blue; }
+    :root { --fg:#111; --muted:#666; --bg:#f7f7f7; }
+    body { font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); background:var(--bg); margin:0; padding:24px; }
+    h1 { margin: 0 0 12px; }
+    .card { background:#fff; border:1px solid #e5e5e5; border-radius:10px; padding:16px; max-width:720px; }
+    form { display:flex; gap:8px; margin:12px 0; }
+    input[type=text] { flex:1; padding:10px; border:1px solid #ccc; border-radius:8px; }
+    button { padding:10px 14px; border:1px solid #bbb; border-radius:8px; background:#f4f4f4; cursor:pointer; }
+    .muted { color:var(--muted); }
+    code { background:#f4f4f4; padding:2px 6px; border-radius:6px; }
+    .log { margin-top:12px; border-top:1px solid #eee; padding-top:10px; }
+    .row { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin:4px 0; }
+    .cmd { color:#005; }
+    .out { color:#333; }
   </style>
 </head>
 <body>
-  <h2>Dummy Shell Simulation (Safe)</h2>
-  <p>This shell is harmless. It only displays what you type.</p>
+  <div class="card">
+    <h1>Dummy Shell Simulation</h1>
+    <p class="muted">This page is <b>safe</b>: it never executes commands. It only displays what you type.</p>
 
-  <input id="cmd" placeholder="Enter command here">
-  <button onclick="showCommand()">Submit</button>
+    <form id="shell">
+      <input id="cmd" type="text" placeholder="Type a command (e.g., whoami)" autocomplete="off" />
+      <button type="submit">Submit</button>
+    </form>
 
-  <div id="output">Attempted command: (none)</div>
+    <div><b>Last attempted:</b> <code id="last">(none)</code></div>
+
+    <div class="log" id="log"></div>
+
+    <p class="muted">Tip: It also reads <code>?cmd=...</code> from the URL for quick demos (e.g., add <code>?cmd=whoami</code>).</p>
+  </div>
 
   <script>
-    function showCommand() {
-      let cmd = document.getElementById("cmd").value;
-      document.getElementById("output").innerText = "Attempted command: " + cmd;
+    // HTML-escape to keep it safe
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+    const last = document.getElementById('last');
+    const log  = document.getElementById('log');
+    const inp  = document.getElementById('cmd');
+
+    function record(cmd) {
+      last.innerHTML = esc(cmd || '(none)');
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `<span class="cmd">$ </span><span class="out">${esc(cmd || '(none)')}</span>`;
+      log.prepend(row);
     }
+
+    // Handle form submits
+    document.getElementById('shell').addEventListener('submit', e => {
+      e.preventDefault();
+      record(inp.value);
+      inp.value = '';
+      inp.focus();
+    });
+
+    // Optional: support ?cmd=whoami in the URL
+    const urlCmd = new URLSearchParams(location.search).get('cmd');
+    if (urlCmd) record(urlCmd);
   </script>
 </body>
 </html>
