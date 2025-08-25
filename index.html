@@ -1,0 +1,11 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Dummy Shell (Safe)</title>
+<h2>Dummy Shell Simulation</h2>
+<p>This page never executes commands. Try <code>?cmd=whoami</code>.</p>
+<p><b>Attempted command:</b> <code id="cmd">(none)</code></p>
+<script>
+  const p = new URLSearchParams(location.search);
+  const esc = s => String(s||'(none)').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+  document.getElementById('cmd').innerText = esc(p.get('cmd'));
+</script>
