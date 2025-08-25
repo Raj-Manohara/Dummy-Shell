@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dummy Shell (Safe)</title>
+  <style>
+    body { font-family: monospace; background:#f4f4f4; padding:20px; }
+    input { width: 300px; padding:5px; }
+    button { padding:5px 10px; margin-left:5px; }
+    #output { margin-top:15px; color:blue; }
+  </style>
+</head>
+<body>
+  <h2>Dummy Shell Simulation (Safe)</h2>
+  <p>This shell is harmless. It only displays what you type.</p>
+
+  <input id="cmd" placeholder="Enter command here">
+  <button onclick="showCommand()">Submit</button>
+
+  <div id="output">Attempted command: (none)</div>
+
+  <script>
+    function showCommand() {
+      let cmd = document.getElementById("cmd").value;
+      document.getElementById("output").innerText = "Attempted command: " + cmd;
+    }
+  </script>
+</body>
+</html>
